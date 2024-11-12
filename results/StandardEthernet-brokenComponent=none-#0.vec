@@ -1,0 +1,573 @@
+version 3
+run StandardEthernet-0-20240530-16:24:12-13076
+attr configname StandardEthernet
+attr datetime 20240530-16:24:12
+attr datetimef 20240530-162412
+attr experiment StandardEthernet
+attr inifile omnetpp.ini
+attr iterationvars "$brokenComponent=\"none\""
+attr iterationvarsd brokenComponent=none
+attr iterationvarsf brokenComponent=none-
+attr measurement "$brokenComponent=\"none\""
+attr network InVehicleNetworkShowcase
+attr processid 13076
+attr repetition 0
+attr replication #0
+attr resultdir results
+attr runnumber 0
+attr seedset 0
+itervar brokenComponent "\"none\""
+config image-path ../../../../images
+config description "Using only standard Ethernet features"
+config *.*Switch.typename EthernetSwitch
+config *.steering.typename StandardHost
+config *.*Wheel.typename StandardHost
+config *.lidar.typename StandardHost
+config *.*Camera.typename StandardHost
+config *.obu.typename StandardHost
+config *.rearDisplay.typename StandardHost
+config *.engineActuator.typename StandardHost
+config *.hud.typename StandardHost
+config *.masterClock.typename ""
+config network InVehicleNetworkShowcase
+config description "Ethernet Time-Sensitive Networking (TSN) example with time synchronization, clock drift, time-aware shaping, Z3 SAT based gate scheduling, credit-based shaping, per-stream filtering and policying, stream redundancy, unicast and multicast streams, link failure protection, frame preemption, cut-through switching, etc."
+config *.brokenComponent "\"none\""
+config *.frontSwitch.ethg$o[3].channel.disabled "\"none\" == \"link\""
+config *.frontLeftSwitch.ethg$o[0].channel.disabled "\"none\" == \"link\""
+config *.frontLeftWheel.app[0].source.productionInterval "\"none\" == \"wheel\" ? 10us : 500us"
+config *.frontLeftCamera.app[0].source.productionInterval "\"none\" == \"camera\" ? 10us : 125us"
+config **.udp.defaultMulticastLoop false
+config *.steering.numApps 1
+config *.steering.app[0].typename UdpSourceApp
+config *.steering.app[0].source.packetNameFormat "\"%M->engineActuator:CDT-%c\""
+config *.steering.app[0].source.packetLength 175B
+config *.steering.app[0].source.productionInterval 500us
+config *.steering.app[0].io.destAddress "\"engineActuator\""
+config *.steering.app[0].io.destPort 1000
+config *.*Wheel.numApps 1
+config *.*Wheel.app[0].typename UdpSourceApp
+config *.*Wheel.app[0].source.packetNameFormat "\"%M->engineActuator:CDT-%c\""
+config *.*Wheel.app[0].source.packetLength 175B
+config *.*Wheel.app[0].source.productionInterval 500us
+config *.*Wheel.app[0].io.destAddress "\"engineActuator\""
+config *.frontLeftWheel.app[0].io.destPort 1001
+config *.frontRightWheel.app[0].io.destPort 1002
+config *.rearLeftWheel.app[0].io.destPort 1003
+config *.rearRightWheel.app[0].io.destPort 1004
+config *.lidar.numApps 1
+config *.lidar.app[0].typename UdpSourceApp
+config *.lidar.app[0].source.packetNameFormat "\"%M->hud:ClassA-%c\""
+config *.lidar.app[0].source.packetLength 325B
+config *.lidar.app[0].source.productionInterval 250us
+config *.lidar.app[0].io.destAddress "\"hud\""
+config *.lidar.app[0].io.destPort 1000
+config *.*Camera.numApps 1
+config *.*Camera.app[0].typename UdpSourceApp
+config *.*Camera.app[0].source.packetNameFormat "\"%M->hud+obu:ClassA-%c\""
+config *.*Camera.app[0].source.packetLength 325B
+config *.*Camera.app[0].source.productionInterval 125us
+config *.*Camera.app[0].io.destAddress "\"224.0.0.42\""
+config *.frontLeftCamera.app[0].io.destPort 1001
+config *.frontRightCamera.app[0].io.destPort 1002
+config *.rearLeftCamera.app[0].io.destPort 1003
+config *.rearRightCamera.app[0].io.destPort 1004
+config *.obu.numApps 6
+config *.obu.app[0].typename UdpSourceApp
+config *.obu.app[0].display-name entertainment
+config *.obu.app[0].source.packetNameFormat "\"%M->rearDisplay:ClassB-%c\""
+config *.obu.app[0].source.packetLength 325B
+config *.obu.app[0].source.productionInterval 250us
+config *.obu.app[0].io.destAddress "\"rearDisplay\""
+config *.obu.app[0].io.destPort 1000
+config *.obu.app[1].typename UdpSourceApp
+config *.obu.app[1].display-name navigation
+config *.obu.app[1].source.packetNameFormat "\"%M->hud:BestEffort-%c\""
+config *.obu.app[1].source.packetLength 325B
+config *.obu.app[1].source.productionInterval 125us
+config *.obu.app[1].io.destAddress "\"hud\""
+config *.obu.app[1].io.destPort 1005
+config *.obu.app[2].display-name "front left camera"
+config *.obu.app[3].display-name "front right camera"
+config *.obu.app[4].display-name "rear left camera"
+config *.obu.app[5].display-name "rear right camera"
+config *.obu.app[2..5].typename UdpSinkApp
+config *.obu.app[2..5].io.multicastAddresses "[\"224.0.0.42\"]"
+config *.obu.app[2].io.localPort 1001
+config *.obu.app[3].io.localPort 1002
+config *.obu.app[4].io.localPort 1003
+config *.obu.app[5].io.localPort 1004
+config *.rearDisplay.numApps 2
+config *.rearDisplay.app[*].typename UdpSinkApp
+config *.rearDisplay.app[0].display-name entertainment
+config *.rearDisplay.app[1].display-name navigation
+config *.rearDisplay.app[0].io.localPort 1000
+config *.rearDisplay.app[1].io.localPort 1001
+config *.engineActuator.numApps 5
+config *.engineActuator.app[*].typename UdpSinkApp
+config *.engineActuator.app[0].display-name steering
+config *.engineActuator.app[1].display-name "front left wheel"
+config *.engineActuator.app[2].display-name "front right wheel"
+config *.engineActuator.app[3].display-name "rear left wheel"
+config *.engineActuator.app[4].display-name "rear right wheel"
+config *.engineActuator.app[0].io.localPort 1000
+config *.engineActuator.app[1].io.localPort 1001
+config *.engineActuator.app[2].io.localPort 1002
+config *.engineActuator.app[3].io.localPort 1003
+config *.engineActuator.app[4].io.localPort 1004
+config *.hud.numApps 7
+config *.hud.app[0].typename UdpSourceApp
+config *.hud.app[0].display-name navigation
+config *.hud.app[0].source.packetNameFormat "\"%M->rearDisplay:ClassB-%c\""
+config *.hud.app[0].source.packetLength 325B
+config *.hud.app[0].source.productionInterval 250us
+config *.hud.app[0].io.destAddress "\"rearDisplay\""
+config *.hud.app[0].io.destPort 1001
+config *.hud.app[1].display-name lidar
+config *.hud.app[2].display-name "front left camera"
+config *.hud.app[3].display-name "front right camera"
+config *.hud.app[4].display-name "rear left camera"
+config *.hud.app[5].display-name "rear right camera"
+config *.hud.app[6].display-name navigation
+config *.hud.app[1..6].typename UdpSinkApp
+config *.hud.app[2..5].io.multicastAddresses "[\"224.0.0.42\"]"
+config *.hud.app[1].io.localPort 1000
+config *.hud.app[2].io.localPort 1001
+config *.hud.app[3].io.localPort 1002
+config *.hud.app[4].io.localPort 1003
+config *.hud.app[5].io.localPort 1004
+config *.hud.app[6].io.localPort 1005
+config *.frontSwitch.eth[0..4].bitrate 1Gbps
+config *.frontLeftSwitch.eth[0..1].bitrate 1Gbps
+config *.frontRightSwitch.eth[0..1].bitrate 1Gbps
+config *.rearSwitch.eth[0..4].bitrate 1Gbps
+config *.rearLeftSwitch.eth[0..1].bitrate 1Gbps
+config *.rearRightSwitch.eth[0..1].bitrate 1Gbps
+config *.hud.eth[0].bitrate 1Gbps
+config *.obu.eth[0].bitrate 1Gbps
+config *.*.eth[*].bitrate 100Mbps
+config *.visualizer.typename IntegratedMultiCanvasVisualizer
+config *.visualizer.dataLinkVisualizer[0].displayLinks true
+config *.visualizer.dataLinkVisualizer[0].activityLevel "\"protocol\""
+config *.visualizer.dataLinkVisualizer[0].packetFilter "\"*Camera*\""
+config *.visualizer.dataLinkVisualizer[0].lineColor "\"blue4\""
+config *.visualizer.dataLinkVisualizer[0].labelColor "\"blue4\""
+config *.visualizer.numNetworkRouteVisualizers 4
+config *.visualizer.networkRouteVisualizer[*].displayRoutes true
+config *.visualizer.networkRouteVisualizer[0].packetFilter "\"*steering* or *Wheel*\""
+config *.visualizer.networkRouteVisualizer[0].lineColor "\"red4\""
+config *.visualizer.networkRouteVisualizer[1].packetFilter "\"*lidar*\""
+config *.visualizer.networkRouteVisualizer[1].lineColor "\"blue4\""
+config *.visualizer.networkRouteVisualizer[2].packetFilter "\"*rearDisplay*\""
+config *.visualizer.networkRouteVisualizer[2].lineColor "\"green4\""
+config *.visualizer.networkRouteVisualizer[3].packetFilter "\"*obu->hud*\""
+config *.visualizer.networkRouteVisualizer[3].lineColor "\"gray\""
+
+vector 0 InVehicleNetworkShowcase.S1.eth[0].macLayer.queue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
+attr title "queue length"
+attr unit pk
+vector 1 InVehicleNetworkShowcase.S1.eth[0].macLayer.queue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
+attr title "queue bit length"
+attr unit b
+vector 2 InVehicleNetworkShowcase.S1.eth[0].phyLayer.interFrameGapInserter interpacketGap:vector ETV
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "count(interpacketGapStarted) - count(interpacketGapEnded)"
+attr title "interpacket gap state"
+attr type int
+vector 3 InVehicleNetworkShowcase.S1.eth[0].phyLayer.transmitter transmitting:vector ETV
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "count(transmissionStarted) - count(transmissionEnded)"
+attr title "transmitting state"
+attr type int
+vector 4 InVehicleNetworkShowcase.S1.eth[1].macLayer.queue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
+attr title "queue length"
+attr unit pk
+vector 5 InVehicleNetworkShowcase.S1.eth[1].macLayer.queue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
+attr title "queue bit length"
+attr unit b
+vector 6 InVehicleNetworkShowcase.S1.eth[1].phyLayer.interFrameGapInserter interpacketGap:vector ETV
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "count(interpacketGapStarted) - count(interpacketGapEnded)"
+attr title "interpacket gap state"
+attr type int
+vector 7 InVehicleNetworkShowcase.S1.eth[1].phyLayer.transmitter transmitting:vector ETV
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "count(transmissionStarted) - count(transmissionEnded)"
+attr title "transmitting state"
+attr type int
+vector 8 InVehicleNetworkShowcase.S1.eth[2].macLayer.queue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
+attr title "queue length"
+attr unit pk
+vector 9 InVehicleNetworkShowcase.S1.eth[2].macLayer.queue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
+attr title "queue bit length"
+attr unit b
+vector 10 InVehicleNetworkShowcase.S1.eth[2].phyLayer.interFrameGapInserter interpacketGap:vector ETV
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "count(interpacketGapStarted) - count(interpacketGapEnded)"
+attr title "interpacket gap state"
+attr type int
+vector 11 InVehicleNetworkShowcase.S1.eth[2].phyLayer.transmitter transmitting:vector ETV
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "count(transmissionStarted) - count(transmissionEnded)"
+attr title "transmitting state"
+attr type int
+vector 12 InVehicleNetworkShowcase.SECC1COM.eth[0].queue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
+attr title "queue length"
+attr unit pk
+vector 13 InVehicleNetworkShowcase.SECC1COM.eth[0].queue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
+attr title "queue bit length"
+attr unit b
+vector 14 InVehicleNetworkShowcase.SECC1COM.udp passedUpPk:vector(count) ETV
+attr interpolationmode none
+attr recordingmode vector(count)
+attr source packetSentToUpper
+attr title "packets passed up, count"
+vector 15 InVehicleNetworkShowcase.SECC1COM.udp droppedPkWrongPort:vector(count) ETV
+attr interpolationmode none
+attr recordingmode vector(count)
+attr source packetDropReasonIsNoPortFound(packetDropped)
+attr title "packets dropped (wrong port), count"
+vector 16 InVehicleNetworkShowcase.SECC1COM.udp droppedPkBadChecksum:vector(count) ETV
+attr interpolationmode none
+attr recordingmode vector(count)
+attr source packetDropReasonIsIncorrectlyReceived(packetDropped)
+attr title "packets dropped (checksum error), count"
+vector 17 InVehicleNetworkShowcase.SECC1MON.eth[0].queue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
+attr title "queue length"
+attr unit pk
+vector 18 InVehicleNetworkShowcase.SECC1MON.eth[0].queue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
+attr title "queue bit length"
+attr unit b
+vector 19 InVehicleNetworkShowcase.SECC1MON.udp passedUpPk:vector(count) ETV
+attr interpolationmode none
+attr recordingmode vector(count)
+attr source packetSentToUpper
+attr title "packets passed up, count"
+vector 20 InVehicleNetworkShowcase.SECC1MON.udp droppedPkWrongPort:vector(count) ETV
+attr interpolationmode none
+attr recordingmode vector(count)
+attr source packetDropReasonIsNoPortFound(packetDropped)
+attr title "packets dropped (wrong port), count"
+vector 21 InVehicleNetworkShowcase.SECC1MON.udp droppedPkBadChecksum:vector(count) ETV
+attr interpolationmode none
+attr recordingmode vector(count)
+attr source packetDropReasonIsIncorrectlyReceived(packetDropped)
+attr title "packets dropped (checksum error), count"
+vector 22 InVehicleNetworkShowcase.S11.eth[0].macLayer.queue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
+attr title "queue length"
+attr unit pk
+vector 23 InVehicleNetworkShowcase.S11.eth[0].macLayer.queue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
+attr title "queue bit length"
+attr unit b
+vector 24 InVehicleNetworkShowcase.S11.eth[0].phyLayer.interFrameGapInserter interpacketGap:vector ETV
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "count(interpacketGapStarted) - count(interpacketGapEnded)"
+attr title "interpacket gap state"
+attr type int
+vector 25 InVehicleNetworkShowcase.S11.eth[0].phyLayer.transmitter transmitting:vector ETV
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "count(transmissionStarted) - count(transmissionEnded)"
+attr title "transmitting state"
+attr type int
+vector 26 InVehicleNetworkShowcase.S11.eth[1].macLayer.queue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
+attr title "queue length"
+attr unit pk
+vector 27 InVehicleNetworkShowcase.S11.eth[1].macLayer.queue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
+attr title "queue bit length"
+attr unit b
+vector 28 InVehicleNetworkShowcase.S11.eth[1].phyLayer.interFrameGapInserter interpacketGap:vector ETV
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "count(interpacketGapStarted) - count(interpacketGapEnded)"
+attr title "interpacket gap state"
+attr type int
+vector 29 InVehicleNetworkShowcase.S11.eth[1].phyLayer.transmitter transmitting:vector ETV
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "count(transmissionStarted) - count(transmissionEnded)"
+attr title "transmitting state"
+attr type int
+vector 30 InVehicleNetworkShowcase.S11.eth[2].macLayer.queue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
+attr title "queue length"
+attr unit pk
+vector 31 InVehicleNetworkShowcase.S11.eth[2].macLayer.queue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
+attr title "queue bit length"
+attr unit b
+vector 32 InVehicleNetworkShowcase.S11.eth[2].phyLayer.interFrameGapInserter interpacketGap:vector ETV
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "count(interpacketGapStarted) - count(interpacketGapEnded)"
+attr title "interpacket gap state"
+attr type int
+vector 33 InVehicleNetworkShowcase.S11.eth[2].phyLayer.transmitter transmitting:vector ETV
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "count(transmissionStarted) - count(transmissionEnded)"
+attr title "transmitting state"
+attr type int
+vector 34 InVehicleNetworkShowcase.SECC2COM.eth[0].queue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
+attr title "queue length"
+attr unit pk
+vector 35 InVehicleNetworkShowcase.SECC2COM.eth[0].queue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
+attr title "queue bit length"
+attr unit b
+vector 36 InVehicleNetworkShowcase.SECC2COM.udp passedUpPk:vector(count) ETV
+attr interpolationmode none
+attr recordingmode vector(count)
+attr source packetSentToUpper
+attr title "packets passed up, count"
+vector 37 InVehicleNetworkShowcase.SECC2COM.udp droppedPkWrongPort:vector(count) ETV
+attr interpolationmode none
+attr recordingmode vector(count)
+attr source packetDropReasonIsNoPortFound(packetDropped)
+attr title "packets dropped (wrong port), count"
+vector 38 InVehicleNetworkShowcase.SECC2COM.udp droppedPkBadChecksum:vector(count) ETV
+attr interpolationmode none
+attr recordingmode vector(count)
+attr source packetDropReasonIsIncorrectlyReceived(packetDropped)
+attr title "packets dropped (checksum error), count"
+vector 39 InVehicleNetworkShowcase.SECC2MON.eth[0].queue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
+attr title "queue length"
+attr unit pk
+vector 40 InVehicleNetworkShowcase.SECC2MON.eth[0].queue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
+attr title "queue bit length"
+attr unit b
+vector 41 InVehicleNetworkShowcase.SECC2MON.udp passedUpPk:vector(count) ETV
+attr interpolationmode none
+attr recordingmode vector(count)
+attr source packetSentToUpper
+attr title "packets passed up, count"
+vector 42 InVehicleNetworkShowcase.SECC2MON.udp droppedPkWrongPort:vector(count) ETV
+attr interpolationmode none
+attr recordingmode vector(count)
+attr source packetDropReasonIsNoPortFound(packetDropped)
+attr title "packets dropped (wrong port), count"
+vector 43 InVehicleNetworkShowcase.SECC2MON.udp droppedPkBadChecksum:vector(count) ETV
+attr interpolationmode none
+attr recordingmode vector(count)
+attr source packetDropReasonIsIncorrectlyReceived(packetDropped)
+attr title "packets dropped (checksum error), count"
+0	0	0	0
+0	0	0	0
+0	0	0	0
+0	0	0	0
+0	0	0	0
+1	0	0	0
+1	0	0	0
+1	0	0	0
+1	0	0	0
+1	0	0	0
+2	0	0	0
+2	0	0	0
+3	0	0	0
+3	0	0	0
+4	0	0	0
+4	0	0	0
+4	0	0	0
+4	0	0	0
+4	0	0	0
+5	0	0	0
+5	0	0	0
+5	0	0	0
+5	0	0	0
+5	0	0	0
+6	0	0	0
+6	0	0	0
+7	0	0	0
+7	0	0	0
+8	0	0	0
+8	0	0	0
+8	0	0	0
+8	0	0	0
+8	0	0	0
+9	0	0	0
+9	0	0	0
+9	0	0	0
+9	0	0	0
+9	0	0	0
+10	0	0	0
+10	0	0	0
+11	0	0	0
+11	0	0	0
+12	0	0	0
+12	0	0	0
+12	0	0	0
+12	0	0	0
+12	0	0	0
+13	0	0	0
+13	0	0	0
+13	0	0	0
+13	0	0	0
+13	0	0	0
+14	0	0	0
+15	0	0	0
+16	0	0	0
+17	0	0	0
+17	0	0	0
+17	0	0	0
+17	0	0	0
+17	0	0	0
+18	0	0	0
+18	0	0	0
+18	0	0	0
+18	0	0	0
+18	0	0	0
+19	0	0	0
+20	0	0	0
+21	0	0	0
+22	0	0	0
+22	0	0	0
+22	0	0	0
+22	0	0	0
+22	0	0	0
+23	0	0	0
+23	0	0	0
+23	0	0	0
+23	0	0	0
+23	0	0	0
+24	0	0	0
+24	0	0	0
+25	0	0	0
+25	0	0	0
+26	0	0	0
+26	0	0	0
+26	0	0	0
+26	0	0	0
+26	0	0	0
+27	0	0	0
+27	0	0	0
+27	0	0	0
+27	0	0	0
+27	0	0	0
+28	0	0	0
+28	0	0	0
+29	0	0	0
+29	0	0	0
+30	0	0	0
+30	0	0	0
+30	0	0	0
+30	0	0	0
+30	0	0	0
+31	0	0	0
+31	0	0	0
+31	0	0	0
+31	0	0	0
+31	0	0	0
+32	0	0	0
+32	0	0	0
+33	0	0	0
+33	0	0	0
+34	0	0	0
+34	0	0	0
+34	0	0	0
+34	0	0	0
+34	0	0	0
+35	0	0	0
+35	0	0	0
+35	0	0	0
+35	0	0	0
+35	0	0	0
+36	0	0	0
+37	0	0	0
+38	0	0	0
+39	0	0	0
+39	0	0	0
+39	0	0	0
+39	0	0	0
+39	0	0	0
+40	0	0	0
+40	0	0	0
+40	0	0	0
+40	0	0	0
+40	0	0	0
+41	0	0	0
+42	0	0	0
+43	0	0	0
+
